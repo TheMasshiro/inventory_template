@@ -1,0 +1,6 @@
+CTkMessagebox==2.7
+CTkTable==1.1
+customtkinter==5.2.2
+darkdetect==0.8.0
+packaging==24.2
+pillow==11.0.0
