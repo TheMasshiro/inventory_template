@@ -3,8 +3,7 @@ CREATE TABLE IF NOT EXISTS suppliers(
     company_name TEXT NOT NULL UNIQUE,
     supplier_name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    phone TEXT NOT NULL UNIQUE,
-    status TEXT NOT NULL
+    phone TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS products (
@@ -25,6 +24,13 @@ CREATE TABLE IF NOT EXISTS sales(
     FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS customers(
+    customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_name TEXT NOT NULL
+);
+
 -- Perf?
 CREATE INDEX idx_product_supplier_id ON products(supplier_id);
 CREATE INDEX idx_sales_product_id ON sales(product_id);
+CREATE INDEX idx_sales_sale_date ON sales(sale_date);
+CREATE INDEX idx_sales_customer_id ON sales(customer_id);
