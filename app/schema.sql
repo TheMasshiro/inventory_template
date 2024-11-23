@@ -31,6 +31,6 @@ CREATE TABLE IF NOT EXISTS customers(
 
 -- Perf?
 CREATE INDEX idx_product_supplier_id ON products(supplier_id);
-CREATE INDEX idx_sales_product_id ON sales(product_id);
-CREATE INDEX idx_sales_sale_date ON sales(sale_date);
-CREATE INDEX idx_sales_customer_id ON sales(customer_id);
+CREATE INDEX idx_customer_id ON customers(customer_id);
+CREATE INDEX idx_product_id ON products(product_id);
+CREATE INDEX idx_supplier_id ON suppliers(product_id);
