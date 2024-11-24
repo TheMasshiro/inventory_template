@@ -50,15 +50,18 @@ class AppTop(customtkinter.CTk):
             Image.open(os.path.join(image_path, "CustomTkinter_logo_single.png")),
             size=(26, 26),
         )
-        self.home_image = customtkinter.CTkImage(
+        self.inventory_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "home_light.png")),
             size=(20, 20),
         )
-        self.chat_image = customtkinter.CTkImage(
+        self.suppliers_image = customtkinter.CTkImage(
+            Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20)
+        )
+        self.sales_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "chat_light.png")),
             size=(20, 20),
         )
-        self.add_user_image = customtkinter.CTkImage(
+        self.alerts_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "add_user_light.png")),
             size=(20, 20),
         )
@@ -72,7 +75,7 @@ class AppTop(customtkinter.CTk):
         # Logo and title on the left
         self.navigation_frame_label = customtkinter.CTkLabel(
             self.navigation_frame,
-            text="Inventory",
+            text="   Inventory",
             image=self.logo_image,
             compound="left",
             font=customtkinter.CTkFont(size=15, weight="bold"),
@@ -89,7 +92,7 @@ class AppTop(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.home_image,
+            image=self.inventory_image,
             compound="top",  # Image above text
             command=self.inventory_event,
         )
@@ -104,7 +107,7 @@ class AppTop(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.add_user_image,
+            image=self.suppliers_image,
             compound="top",  # Image above text
             command=self.suppliers_event,
         )
@@ -119,7 +122,7 @@ class AppTop(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.chat_image,
+            image=self.sales_image,
             compound="top",  # Image above text
             command=self.sales_event,
         )
@@ -134,7 +137,7 @@ class AppTop(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.add_user_image,
+            image=self.alerts_image,
             compound="top",  # Image above text
             command=self.alerts_event,
         )
@@ -226,22 +229,18 @@ class AppRight(customtkinter.CTk):
             Image.open(os.path.join(image_path, "CustomTkinter_logo_single.png")),
             size=(26, 26),
         )
-        self.large_test_image = customtkinter.CTkImage(
-            Image.open(os.path.join(image_path, "large_test_image.png")),
-            size=(500, 150),
-        )
-        self.image_icon_image = customtkinter.CTkImage(
-            Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20)
-        )
-        self.home_image = customtkinter.CTkImage(
+        self.inventory_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "home_light.png")),
             size=(20, 20),
         )
-        self.chat_image = customtkinter.CTkImage(
+        self.suppliers_image = customtkinter.CTkImage(
+            Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20)
+        )
+        self.sales_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "chat_light.png")),
             size=(20, 20),
         )
-        self.add_user_image = customtkinter.CTkImage(
+        self.alerts_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "add_user_light.png")),
             size=(20, 20),
         )
@@ -253,7 +252,7 @@ class AppRight(customtkinter.CTk):
 
         self.navigation_frame_label = customtkinter.CTkLabel(
             self.navigation_frame,
-            text="Inventory",
+            text="   Inventory",
             image=self.logo_image,
             compound="left",
             font=customtkinter.CTkFont(size=15, weight="bold"),
@@ -269,7 +268,7 @@ class AppRight(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.home_image,
+            image=self.inventory_image,
             anchor="w",
             command=self.inventory_event,
         )
@@ -284,7 +283,7 @@ class AppRight(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.add_user_image,
+            image=self.alerts_image,
             anchor="w",
             command=self.suppliers_event,
         )
@@ -299,7 +298,7 @@ class AppRight(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.chat_image,
+            image=self.sales_image,
             anchor="w",
             command=self.sales_event,
         )
@@ -314,7 +313,7 @@ class AppRight(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.add_user_image,
+            image=self.alerts_image,
             anchor="w",
             command=self.alerts_event,
         )
@@ -402,22 +401,18 @@ class AppLeft(customtkinter.CTk):
             Image.open(os.path.join(image_path, "CustomTkinter_logo_single.png")),
             size=(26, 26),
         )
-        self.large_test_image = customtkinter.CTkImage(
-            Image.open(os.path.join(image_path, "large_test_image.png")),
-            size=(500, 150),
-        )
-        self.image_icon_image = customtkinter.CTkImage(
-            Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20)
-        )
-        self.home_image = customtkinter.CTkImage(
+        self.inventory_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "home_light.png")),
             size=(20, 20),
         )
-        self.chat_image = customtkinter.CTkImage(
+        self.suppliers_image = customtkinter.CTkImage(
+            Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20)
+        )
+        self.sales_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "chat_light.png")),
             size=(20, 20),
         )
-        self.add_user_image = customtkinter.CTkImage(
+        self.alerts_image = customtkinter.CTkImage(
             dark_image=Image.open(os.path.join(image_path, "add_user_light.png")),
             size=(20, 20),
         )
@@ -429,7 +424,7 @@ class AppLeft(customtkinter.CTk):
 
         self.navigation_frame_label = customtkinter.CTkLabel(
             self.navigation_frame,
-            text="Inventory",
+            text="   Inventory",
             image=self.logo_image,
             compound="left",
             font=customtkinter.CTkFont(size=15, weight="bold"),
@@ -445,7 +440,7 @@ class AppLeft(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.home_image,
+            image=self.inventory_image,
             anchor="w",
             command=self.inventory_event,
         )
@@ -460,7 +455,7 @@ class AppLeft(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.add_user_image,
+            image=self.alerts_image,
             anchor="w",
             command=self.suppliers_event,
         )
@@ -475,7 +470,7 @@ class AppLeft(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.chat_image,
+            image=self.sales_image,
             anchor="w",
             command=self.sales_event,
         )
@@ -490,7 +485,7 @@ class AppLeft(customtkinter.CTk):
             fg_color="transparent",
             text_color=("gray10", "gray90"),
             hover_color=("gray70", "gray30"),
-            image=self.add_user_image,
+            image=self.alerts_image,
             anchor="w",
             command=self.alerts_event,
         )

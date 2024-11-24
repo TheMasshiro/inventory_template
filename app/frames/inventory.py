@@ -1,6 +1,7 @@
 from customtkinter import CTkFrame, CTkLabel, CTkButton, CTkEntry
 from tkinter import ttk
 from app.frames.style import configure_treeview_style
+from app.models.products import Products
 
 
 class InventoryFrame(CTkFrame):
@@ -31,11 +32,12 @@ class InventoryFrame(CTkFrame):
 
         self.tree = ttk.Treeview(
             self,
-            columns=("Product", "Stock", "Price", "Total", "Updated", "Supplier"),
+            columns=("ID", "Product", "Stock", "Price", "Total", "Updated", "Supplier"),
             show="headings",
             height=15,
         )
 
+        self.tree.heading("ID", text="ID")
         self.tree.heading("Product", text="Product")
         self.tree.heading("Stock", text="Stock")
         self.tree.heading("Price", text="Price")
@@ -43,6 +45,7 @@ class InventoryFrame(CTkFrame):
         self.tree.heading("Updated", text="Updated")
         self.tree.heading("Supplier", text="Supplier")
 
+        self.tree.column("ID", width=70, anchor="center")
         self.tree.column("Product", width=150, anchor="center")
         self.tree.column("Stock", width=100, anchor="center")
         self.tree.column("Price", width=100, anchor="center")
@@ -84,17 +87,6 @@ class InventoryFrame(CTkFrame):
 
         self.hsb.grid(row=3, column=0, sticky="ew", padx=10)
 
-        self.sample_data = [
-            ["Apple", "100", "$1.99", "$199.00", "2024-03-20", "FreshFruit Co"],
-            ["Banana", "150", "$0.99", "$148.50", "2024-03-19", "Tropical Imports"],
-            ["Orange", "75", "$1.49", "$111.75", "2024-03-18", "CitrusWorld"],
-            ["Mango", "50", "$2.99", "$149.50", "2024-03-17", "Tropical Imports"],
-            ["Pear", "80", "$1.79", "$143.20", "2024-03-16", "FreshFruit Co"],
-        ]
-
-        for item in self.sample_data:
-            self.tree.insert("", "end", values=item)
-
         # Button Frame with centering
         self.button_frame = CTkFrame(self, fg_color="transparent")
         self.button_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=10)
@@ -131,6 +123,9 @@ class InventoryFrame(CTkFrame):
         # Bind selection event to tree
         self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
 
+        # Load Data
+        self.refresh_tree()
+
     def clear_entries(self):
         """Clear all entry fields"""
         self.product_entry.delete(0, "end")
@@ -145,108 +140,162 @@ class InventoryFrame(CTkFrame):
             item = selected_items[0]
             values = self.tree.item(item)["values"]
 
-            # Clear existing entries
             self.clear_entries()
 
-            # Fill entries with selected values
-            self.product_entry.insert(0, values[0])
-            self.stock_entry.insert(0, values[1].replace("$", ""))
-            self.price_entry.insert(0, values[2].replace("$", ""))
-            self.supplier_entry.insert(0, values[5])
+            self.product_entry.insert(0, values[1])
+            self.stock_entry.insert(0, str(values[2]))
+            self.price_entry.insert(0, str(values[3]).replace("₱", ""))
+            self.supplier_entry.insert(0, values[6])
 
-    def add_item(self):
-        """Add new item to the tree"""
-        # Get values from entries
-        product = self.product_entry.get()
-        stock = self.stock_entry.get()
-        price = self.price_entry.get()
-
-        # Calculate total
-        try:
-            total = float(stock) * float(price.replace("$", ""))
-            total_formatted = f"${total:.2f}"
-        except ValueError:
-            total_formatted = "$0.00"
-
-        # Format price with $
-        if not price.startswith("$"):
-            price = f"${price}"
-
-        # Get current date
+    def refresh_tree(self):
+        """Refresh the tree with updated data"""
         from datetime import datetime
 
-        current_date = datetime.now().strftime("%Y-%m-%d")
-
-        supplier = self.supplier_entry.get()
-
-        # Insert into tree
-        if product and stock and price and supplier:
-            self.tree.insert(
-                "",
-                "end",
-                values=(product, stock, price, total_formatted, current_date, supplier),
-            )
-            self.clear_entries()
-
-    def edit_item(self):
-        selected_items = self.tree.selection()
-        if selected_items:
-            item_id = selected_items[0]
-
-            # Get values from entries
-            product = self.product_entry.get()
-            stock = self.stock_entry.get()
-            price = self.price_entry.get()
-
-            # Calculate total
-            try:
-                total = float(stock) * float(price.replace("$", ""))
-                total_formatted = f"${total:.2f}"
-            except ValueError:
-                total_formatted = "$0.00"
-
-            # Format price with $
-            if not price.startswith("$"):
-                price = f"${price}"
-
-            # Get current date
-            from datetime import datetime
-
-            current_date = datetime.now().strftime("%Y-%m-%d")
-
-            supplier = self.supplier_entry.get()
-
-            # Update the item
-            if product and stock and price and supplier:
-                self.tree.item(
-                    item_id,
-                    values=(
-                        product,
-                        stock,
-                        price,
-                        total_formatted,
-                        current_date,
-                        supplier,
-                    ),
-                )
-                self.clear_entries()
-
-    def delete_item(self):
-        selected_items = self.tree.selection()
-        if selected_items:
-            for item_id in selected_items:
-                self.tree.delete(item_id)
-            self.clear_entries()
-
-    def on_search_change(self, _event=None):
-        """Handle real-time search as user types"""
-        search_term = self.search_entry.get().lower()
+        products = Products().get_all_products()
+        if not products:
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+            return
 
         for item in self.tree.get_children():
             self.tree.delete(item)
 
-        for item in self.sample_data:
-            if search_term == "" or any(
-                search_term in str(value).lower() for value in item
-            ):
-                self.tree.insert("", "end", values=item)
+        for row in products:
+            total = float(row[2]) * float(row[3])
+            total_formatted = f"₱{total:.2f}"
+            price_formatted = f"₱{float(row[2]):.2f}"
+
+            try:
+                date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
+                date_formatted = date_obj.strftime("%d/%m/%Y")
+            except (ValueError, TypeError):
+                date_formatted = row[5]
+
+            self.tree.insert(
+                "",
+                "end",
+                values=(
+                    row[0],  # id
+                    row[1],  # name
+                    row[3],  # stock
+                    price_formatted,  # price
+                    total_formatted,  # total
+                    date_formatted,  # updated date in DD/MM/YYYY format
+                    row[4],  # supplier
+                ),
+            )
+
+    def add_item(self):
+        """Add new item to the tree"""
+        product = self.product_entry.get()
+        stock = self.stock_entry.get()
+        price = self.price_entry.get()
+        supplier = self.supplier_entry.get()
+
+        if product and stock and price and supplier:
+            if Products().add_product(product, price, stock, supplier):
+                self.refresh_tree()
+                self.clear_entries()
+            else:
+                print("Error adding product")
+
+    def edit_item(self):
+        """Edit selected item in the tree"""
+        selected_items = self.tree.selection()
+        if not selected_items:
+            return
+
+        item = selected_items[0]
+        values = self.tree.item(item)["values"]
+        product_id = values[0]
+
+        product = self.product_entry.get()
+        stock = self.stock_entry.get()
+        price = self.price_entry.get()
+        supplier = self.supplier_entry.get()
+
+        if not all([product, stock, price, supplier]):
+            return
+
+        try:
+            price = float(price)
+            stock = int(stock)
+
+            if Products().edit_product(product_id, product, price, stock, supplier):
+                self.refresh_tree()
+                self.clear_entries()
+            else:
+                print("Error editing product")
+
+        except ValueError:
+            print("Invalid price or stock value")
+
+    def delete_item(self):
+        """Delete selected item from the tree"""
+        selected_items = self.tree.selection()
+        if not selected_items:
+            return
+
+        item = selected_items[0]
+        values = self.tree.item(item)["values"]
+        product_id = values[0]
+
+        from tkinter import messagebox
+
+        if messagebox.askyesno(
+            "Confirm Delete", "Are you sure you want to delete this item?"
+        ):
+            if Products().delete_product(product_id):
+                self.refresh_tree()
+                self.clear_entries()
+            else:
+                print("Error deleting product")
+
+    def on_search_change(self, _event=None):
+        """Handle real-time search as user types"""
+        from datetime import datetime
+
+        search_term = self.search_entry.get().lower()
+        products = Products().get_all_products()
+        if not products:
+            return
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        for row in products:
+            total = float(row[2]) * float(row[3])
+            total_formatted = f"₱{total:.2f}"
+            price_formatted = f"₱{float(row[2]):.2f}"
+
+            try:
+                date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
+                date_formatted = date_obj.strftime("%d/%m/%Y")
+            except (ValueError, TypeError):
+                date_formatted = row[5]
+
+            formatted_row = (
+                row[0],  # id
+                row[1],  # name
+                row[3],  # stock
+                price_formatted,  # price
+                total_formatted,  # total
+                date_formatted,  # updated date
+                row[4],  # supplier
+            )
+
+            search_row = tuple(
+                str(value).lower()
+                for value in (
+                    row[0],  # id
+                    row[1],  # name
+                    row[3],  # stock
+                    price_formatted,  # price
+                    total_formatted,  # total
+                    date_formatted,  # updated date
+                    row[4],  # supplier
+                )
+            )
+
+            if search_term == "" or any(search_term in field for field in search_row):
+                self.tree.insert("", "end", values=formatted_row)

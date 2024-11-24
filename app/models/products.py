@@ -33,13 +33,18 @@ class Products:
             logging.error(f"Error: {e}")
             return None
 
-    def add_product(self, product_name, price, stock):
-        query = "INSERT INTO products (name, price, stock) VALUES (?, ?, ?)"
+    def add_product(self, product_name, price, stock, supplier_name):
+        query = "INSERT INTO products (product_name, price, stock, supplier_name) VALUES (?, ?, ?, ?)"
+        sales_query = "INSERT INTO sales (product_id, product_sold) VALUES (?, ?)"
 
         try:
             with get_db_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute(query, (product_name, price, stock))
+                cursor.execute(query, (product_name, price, stock, supplier_name))
+                conn.commit()
+
+                product_id = cursor.lastrowid
+                cursor.execute(sales_query, (product_id, 0))
                 conn.commit()
 
                 return True
@@ -47,17 +52,15 @@ class Products:
             logging.error(f"Error: {f}")
             return False
 
-        except sqlite3.DatabaseError as e:
-            logging.error(f"Error: {e}")
-            return False
-
-    def edit_product(self, product_id, product_name, price, stock):
-        query = "UPDATE products SET name = ?, price = ?, stock = ? WHERE id = ?"
+    def edit_product(self, product_id, product_name, price, stock, supplier_name):
+        query = "UPDATE products SET product_name = ?, price = ?, stock = ?, supplier_name = ? WHERE product_id = ?"
 
         try:
             with get_db_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute(query, (product_name, price, stock, product_id))
+                cursor.execute(
+                    query, (product_name, price, stock, supplier_name, product_id)
+                )
                 conn.commit()
 
                 return True
@@ -70,12 +73,16 @@ class Products:
             return False
 
     def delete_product(self, product_id):
-        query = "DELETE FROM products WHERE id = ?"
+        query = "DELETE FROM products WHERE product_id = ?"
+        sales_query = "DELETE FROM sales WHERE product_id = ?"
 
         try:
             with get_db_connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(query, (product_id,))
+                conn.commit()
+
+                cursor.execute(sales_query, (product_id,))
                 conn.commit()
 
                 return True
