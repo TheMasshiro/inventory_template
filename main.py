@@ -1,8 +1,9 @@
-from app.app import App
+from app.app import (
+    AppLeft,
+)  # Change this to AppLeft, AppRight, or AppTop for navigation
 from app.db import init_db
 
 if __name__ == "__main__":
     init_db()
-    app = App()
+    app = AppLeft()  # Change this to AppLeft, AppRight, or AppTop for navigation
     app.mainloop()
-
