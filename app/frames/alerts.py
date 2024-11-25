@@ -35,7 +35,7 @@ class AlertsFrame(customtkinter.CTkFrame):
 
         self.tree = ttk.Treeview(
             self,
-            columns=("ID", "Product", "Sold", "Supplier"),
+            columns=("ID", "Product", "Stock", "Status"),
             show="headings",
             height=15,
         )
@@ -104,6 +104,8 @@ class AlertsFrame(customtkinter.CTkFrame):
                 row[2],  # product
                 row[4],  # stock
             )
+            if row[4] < 10:
+                formatted_row += ("Low Stock",)
             self.tree.insert("", "end", values=formatted_row)
 
     def on_tree_select(self, event):
