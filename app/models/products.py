@@ -57,6 +57,7 @@ class Products:
                 cursor = conn.cursor()
                 cursor.execute(supplier_query, (supplier_name,))
                 supplier_id = cursor.fetchone()[0]
+                print(supplier_id)
 
                 cursor.execute(
                     query, (product_name, supplier_id, price, stock, supplier_name)
