@@ -96,7 +96,7 @@ class InventoryFrame(CTkFrame):
         # Button Frame with centering
         self.button_frame = CTkFrame(self, fg_color="transparent")
         self.button_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=10)
-        self.button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
+        self.button_frame.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
 
         self.add_button = CTkButton(
             self.button_frame, text="Add Product", command=self.add_item, width=120
@@ -126,12 +126,26 @@ class InventoryFrame(CTkFrame):
         )
         self.clear_button.grid(row=0, column=3, padx=5)
 
+        self.refresh_button = CTkButton(
+            self.button_frame,
+            text="Refresh",
+            command=self.refresh_all,
+            width=120,
+        )
+        self.refresh_button.grid(row=0, column=4, padx=5)
+
         # Bind selection event to tree
         self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
 
         # Load Data
         self.refresh_tree()
         self.load_suppliers()
+
+    def refresh_all(self):
+        """Refresh all data in the frame"""
+        self.refresh_tree()
+        self.load_suppliers()
+        self.clear_entries()
 
     def clear_entries(self):
         """Clear all entry fields"""
