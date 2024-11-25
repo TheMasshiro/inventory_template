@@ -195,7 +195,7 @@ class SuppliersFrame(CTkFrame):
                     )
 
     def edit_item(self):
-        """Edit selected item in the tree"""
+        """Edit selected supplier in the tree"""
         selected_items = self.tree.selection()
         if not selected_items:
             return
@@ -247,7 +247,7 @@ class SuppliersFrame(CTkFrame):
                 )
 
     def delete_item(self):
-        """Delete selected item from the tree"""
+        """Delete selected supplier from the tree"""
         selected_items = self.tree.selection()
         if not selected_items:
             return
