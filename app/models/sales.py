@@ -45,23 +45,13 @@ class Sales:
             logging.error(f"Error: {e}")
             return None
 
-    def add_sales(self, product_id, product_sold):
-        query = "INSERT INTO sales (product_id, product_sold) VALUES (?, ?)"
-
-        try:
-            with get_db_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute(query, (product_id, product_sold))
-                conn.commit()
-        except sqlite3.DatabaseError as e:
-            logging.error(f"Error: {e}")
-            return None
-
     def edit_sales(self, sales_id, product_sold):
         query = "UPDATE sales SET product_sold = ? WHERE sale_id = ?"
 
         try:
             with get_db_connection() as conn:
+                print("sales_id", sales_id)
+                print("product_sold", product_sold)
                 cursor = conn.cursor()
                 cursor.execute(query, (product_sold, sales_id))
                 conn.commit()

@@ -77,17 +77,12 @@ class SalesFrame(customtkinter.CTkFrame):
         # Button Frame with centering
         self.button_frame = CTkFrame(self, fg_color="transparent")
         self.button_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=10)
-        self.button_frame.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
-
-        self.add_button = CTkButton(
-            self.button_frame, text="Add Sale", command=self.add_supplier, width=120
-        )
-        self.add_button.grid(row=0, column=0, padx=5)
+        self.button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
         self.edit_button = CTkButton(
             self.button_frame, text="Edit Sale", command=self.edit_item, width=120
         )
-        self.edit_button.grid(row=0, column=1, padx=5)
+        self.edit_button.grid(row=0, column=0, padx=5)
 
         self.delete_button = CTkButton(
             self.button_frame,
@@ -97,7 +92,7 @@ class SalesFrame(customtkinter.CTkFrame):
             hover_color="darkred",
             width=120,
         )
-        self.delete_button.grid(row=0, column=2, padx=5)
+        self.delete_button.grid(row=0, column=1, padx=5)
 
         self.clear_button = CTkButton(
             self.button_frame,
@@ -105,7 +100,7 @@ class SalesFrame(customtkinter.CTkFrame):
             command=self.clear_entries,
             width=120,
         )
-        self.clear_button.grid(row=0, column=3, padx=5)
+        self.clear_button.grid(row=0, column=2, padx=5)
 
         self.refresh_button = CTkButton(
             self.button_frame,
@@ -113,7 +108,7 @@ class SalesFrame(customtkinter.CTkFrame):
             command=self.refresh_all,
             width=120,
         )
-        self.refresh_button.grid(row=0, column=4, padx=5)
+        self.refresh_button.grid(row=0, column=3, padx=5)
 
         # Bind selection event to tree
         self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
@@ -176,23 +171,6 @@ class SalesFrame(customtkinter.CTkFrame):
                 row[3],  # supplier
             )
             self.tree.insert("", "end", values=formatted_row)
-
-    def add_supplier(self):
-        """Add new supplier to the tree"""
-        product_name = self.product_options.get()
-        sold = self.sold_entry.get()
-        from tkinter import messagebox
-
-        try:
-            sold = int(sold)
-            if product_name and sold:
-                if Sales().add_sales(product_name, sold):
-                    self.refresh_tree()
-                    self.clear_entries()
-                else:
-                    messagebox.showerror("Cannot Add Sales", "Sales already exists")
-        except ValueError:
-            messagebox.showerror("Invalid Input", "Invalid sold number")
 
     def edit_item(self):
         """Edit selected sales in the tree"""
