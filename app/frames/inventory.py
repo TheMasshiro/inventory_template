@@ -83,9 +83,20 @@ class InventoryFrame(CTkFrame):
         self.price_entry = CTkEntry(self.entry_frame, width=120)
         self.price_entry.grid(row=0, column=5, padx=5, pady=5)
 
+        # Get all supplier names
+        supplier_names = Suppliers().get_all_supplier_names()
+        if not supplier_names:
+            supplier_names = []
+        supplier_names = [name[0] for name in supplier_names]
+
+        if not supplier_names:
+            supplier_names = ["No Suppliers Found"]
+
         self.supplier_label = CTkLabel(self.entry_frame, text="Supplier:")
         self.supplier_label.grid(row=0, column=6, padx=5, pady=5)
-        self.supplier_options = CTkOptionMenu(self.entry_frame, width=120)
+        self.supplier_options = CTkOptionMenu(
+            self.entry_frame, values=supplier_names, width=120
+        )
         self.supplier_options.grid(row=0, column=7, padx=5, pady=5)
 
         self.hsb.grid(row=3, column=0, sticky="ew", padx=10)
@@ -128,6 +139,7 @@ class InventoryFrame(CTkFrame):
 
         # Load Data
         self.refresh_tree()
+        self.refresh_options()
 
     def refresh_options(self):
         """Refresh supplier options"""
@@ -138,6 +150,8 @@ class InventoryFrame(CTkFrame):
 
         if not supplier_names:
             supplier_names = ["No Suppliers Found"]
+
+        print(supplier_names)
 
         self.supplier_options.set("")
         self.supplier_options.set_menu_values(supplier_names)
@@ -200,8 +214,6 @@ class InventoryFrame(CTkFrame):
                     row[4],  # supplier
                 ),
             )
-
-            self.refresh_options()
 
     def add_item(self):
         """Add new item to the tree"""
