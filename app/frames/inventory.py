@@ -152,6 +152,7 @@ class InventoryFrame(CTkFrame):
             self.product_entry.insert(0, values[1])
             self.stock_entry.insert(0, str(values[2]))
             self.price_entry.insert(0, str(values[3]).replace("₱", ""))
+            self.supplier_options.set(values[6])
 
     def load_suppliers(self):
         """Load suppliers to the option menu"""
@@ -233,6 +234,7 @@ class InventoryFrame(CTkFrame):
         supplier = self.supplier_options.get()
 
         if not all([product, stock, price, supplier]):
+            print("All fields are required")
             return
 
         try:
