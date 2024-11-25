@@ -86,12 +86,7 @@ class InventoryFrame(CTkFrame):
         # Get all supplier names
         supplier_names = Suppliers().get_all_supplier_names()
         if not supplier_names:
-            supplier_names = []
-        supplier_names = [name[0] for name in supplier_names]
-
-        if not supplier_names:
             supplier_names = ["No Suppliers Found"]
-        print(supplier_names)
 
         self.supplier_label = CTkLabel(self.entry_frame, text="Supplier:")
         self.supplier_label.grid(row=0, column=6, padx=5, pady=5)
@@ -140,6 +135,19 @@ class InventoryFrame(CTkFrame):
 
         # Load Data
         self.refresh_tree()
+
+    def refresh_options(self):
+        """Refresh supplier options"""
+        supplier_names = Suppliers().get_all_supplier_names()
+        if not supplier_names:
+            supplier_names = []
+        supplier_names = [name[0] for name in supplier_names]
+
+        if not supplier_names:
+            supplier_names = ["No Suppliers Found"]
+
+        self.supplier_options.set("")
+        self.supplier_options.set_menu_values(supplier_names)
 
     def clear_entries(self):
         """Clear all entry fields"""
