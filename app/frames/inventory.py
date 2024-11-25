@@ -1,4 +1,4 @@
-from tkinter import ttk
+from tkinter import StringVar, Variable, ttk
 
 from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu
 
@@ -83,9 +83,12 @@ class InventoryFrame(CTkFrame):
         self.price_entry = CTkEntry(self.entry_frame, width=120)
         self.price_entry.grid(row=0, column=5, padx=5, pady=5)
 
+        supplier_options_var = StringVar(value="Select Supplier")
         self.supplier_label = CTkLabel(self.entry_frame, text="Supplier:")
         self.supplier_label.grid(row=0, column=6, padx=5, pady=5)
-        self.supplier_options = CTkOptionMenu(self.entry_frame, width=120)
+        self.supplier_options = CTkOptionMenu(
+            self.entry_frame, variable=supplier_options_var, width=120
+        )
         self.supplier_options.grid(row=0, column=7, padx=5, pady=5)
 
         self.hsb.grid(row=3, column=0, sticky="ew", padx=10)
