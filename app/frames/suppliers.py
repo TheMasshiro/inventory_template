@@ -1,10 +1,12 @@
-import customtkinter
-from customtkinter import CTkFrame, CTkLabel, CTkButton, CTkEntry
-from app.frames.style import configure_treeview_style
 from tkinter import ttk
 
+from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel
 
-class SuppliersFrame(customtkinter.CTkFrame):
+from app.frames.style import configure_treeview_style
+from app.models.products import Products
+
+
+class SuppliersFrame(CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
@@ -32,22 +34,22 @@ class SuppliersFrame(customtkinter.CTkFrame):
 
         self.tree = ttk.Treeview(
             self,
-            columns=("Product", "Stock", "Price", "Total", "Updated"),
+            columns=("ID", "Company", "Supplier Name", "Email", "Contant No."),
             show="headings",
             height=15,
         )
 
-        self.tree.heading("Product", text="Product")
-        self.tree.heading("Stock", text="Stock")
-        self.tree.heading("Price", text="Price")
-        self.tree.heading("Total", text="Total")
-        self.tree.heading("Updated", text="Updated")
+        self.tree.heading("ID", text="ID")
+        self.tree.heading("Company", text="Company")
+        self.tree.heading("Supplier Name", text="Supplier Name")
+        self.tree.heading("Email", text="Email")
+        self.tree.heading("Contact No.", text="Contant No.")
 
-        self.tree.column("Product", width=150)
-        self.tree.column("Stock", width=100)
-        self.tree.column("Price", width=100)
-        self.tree.column("Total", width=100)
-        self.tree.column("Updated", width=150)
+        self.tree.column("ID", width=70, anchor="center")
+        self.tree.column("Company", width=150, anchor="center")
+        self.tree.column("Supplier Name", width=100, anchor="center")
+        self.tree.column("Email", width=100, anchor="center")
+        self.tree.column("Contact No.", width=100, anchor="center")
 
         self.vsb = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
         self.hsb = ttk.Scrollbar(self, orient="horizontal", command=self.tree.xview)
@@ -55,72 +57,250 @@ class SuppliersFrame(customtkinter.CTkFrame):
 
         self.tree.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
         self.vsb.grid(row=1, column=1, sticky="ns", pady=10)
-        self.hsb.grid(row=2, column=0, sticky="ew", padx=10)
 
-        self.sample_data = [
-            ["Apple", "100", "$1.99", "$199.00", "2024-03-20"],
-            ["Banana", "150", "$0.99", "$148.50", "2024-03-19"],
-            ["Orange", "75", "$1.49", "$111.75", "2024-03-18"],
-            ["Mango", "50", "$2.99", "$149.50", "2024-03-17"],
-            ["Pear", "80", "$1.79", "$143.20", "2024-03-16"],
-        ]
+        # Entry Frame with centering
+        self.entry_frame = CTkFrame(self, fg_color="transparent")
+        self.entry_frame.grid(row=2, column=0, sticky="ew", padx=10, pady=10)
+        self.entry_frame.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
 
-        for item in self.sample_data:
-            self.tree.insert("", "end", values=item)
+        self.company_label = CTkLabel(self.entry_frame, text="Company:")
+        self.company_label.grid(row=0, column=0, padx=5, pady=5)
+        self.company_entry = CTkEntry(self.entry_frame, width=120)
+        self.company_entry.grid(row=0, column=1, padx=5, pady=5)
 
+        self.supplier_label = CTkLabel(self.entry_frame, text="Supplier:")
+        self.supplier_label.grid(row=0, column=2, padx=5, pady=5)
+        self.supplier_entry = CTkEntry(self.entry_frame, width=120)
+        self.supplier_entry.grid(row=0, column=3, padx=5, pady=5)
+
+        self.email_label = CTkLabel(self.entry_frame, text="Email:")
+        self.email_label.grid(row=0, column=4, padx=5, pady=5)
+        self.email_entry = CTkEntry(self.entry_frame, width=120)
+        self.email_entry.grid(row=0, column=5, padx=5, pady=5)
+
+        self.contact_label = CTkLabel(self.entry_frame, text="Contact No.:")
+        self.contact_label.grid(row=0, column=6, padx=5, pady=5)
+        self.contact_entry = CTkEntry(self.entry_frame, width=120)
+        self.contact_entry.grid(row=0, column=7, padx=5, pady=5)
+
+        self.hsb.grid(row=3, column=0, sticky="ew", padx=10)
+
+        # Button Frame with centering
         self.button_frame = CTkFrame(self, fg_color="transparent")
-        self.button_frame.grid(row=3, column=0, sticky="ew", padx=10, pady=10)
+        self.button_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=10)
+        self.button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
         self.add_button = CTkButton(
-            self.button_frame, text="Add Item", command=self.add_item
+            self.button_frame, text="Add Item", command=self.add_item, width=120
         )
         self.add_button.grid(row=0, column=0, padx=5)
 
         self.edit_button = CTkButton(
-            self.button_frame, text="Edit Item", command=self.edit_item
+            self.button_frame, text="Edit Item", command=self.edit_item, width=120
         )
         self.edit_button.grid(row=0, column=1, padx=5)
 
-        # Delete button
         self.delete_button = CTkButton(
             self.button_frame,
             text="Delete Item",
             command=self.delete_item,
             fg_color="red",
             hover_color="darkred",
+            width=120,
         )
         self.delete_button.grid(row=0, column=2, padx=5)
 
-    def add_item(self):
-        print("Add item clicked")
+        self.clear_button = CTkButton(
+            self.button_frame,
+            text="Clear Fields",
+            command=self.clear_entries,
+            width=120,
+        )
+        self.clear_button.grid(row=0, column=3, padx=5)
 
-    def edit_item(self):
+        # Bind selection event to tree
+        self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
+
+        # Load Data
+        self.refresh_tree()
+
+    def clear_entries(self):
+        """Clear all entry fields"""
+        self.company_entry.delete(0, "end")
+        self.supplier_entry.delete(0, "end")
+        self.email_entry.delete(0, "end")
+        self.contact_entry.delete(0, "end")
+
+    def on_tree_select(self, event):
+        """Fill entry boxes when a row is selected"""
         selected_items = self.tree.selection()
         if selected_items:
-            item_id = selected_items[0]
-            values = self.tree.item(item_id)["values"]
-            print("Editing item:")
-            print(f"Product: {values[0]}")
-            print(f"Stock: {values[1]}")
-            print(f"Price: {values[2]}")
-            print(f"Total: {values[3]}")
-            print(f"Updated: {values[4]}")
+            item = selected_items[0]
+            values = self.tree.item(item)["values"]
 
-    def delete_item(self):
-        selected_items = self.tree.selection()
-        if selected_items:
-            for item_id in selected_items:
-                self.tree.delete(item_id)
+            self.clear_entries()
 
-    def on_search_change(self, _event=None):
-        """Handle real-time search as user types"""
-        search_term = self.search_entry.get().lower()
+            self.company_entry.insert(0, values[1])
+            self.supplier_entry.insert(0, str(values[2]))
+            self.email_entry.insert(0, str(values[3]).replace("₱", ""))
+            self.contact_entry.insert(0, values[6])
+
+    def refresh_tree(self):
+        """Refresh the tree with updated data"""
+        from datetime import datetime
+
+        products = Products().get_all_products()
+        if not products:
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+            return
 
         for item in self.tree.get_children():
             self.tree.delete(item)
 
-        for item in self.sample_data:
-            if search_term == "" or any(
-                search_term in str(value).lower() for value in item
+        for row in products:
+            total = float(row[2]) * float(row[3])
+            total_formatted = f"₱{total:.2f}"
+            price_formatted = f"₱{float(row[2]):.2f}"
+
+            try:
+                date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
+                date_formatted = date_obj.strftime("%d/%m/%Y")
+            except (ValueError, TypeError):
+                date_formatted = row[5]
+
+            self.tree.insert(
+                "",
+                "end",
+                values=(
+                    row[0],  # id
+                    row[1],  # name
+                    row[3],  # stock
+                    price_formatted,  # price
+                    total_formatted,  # total
+                    date_formatted,  # updated date in DD/MM/YYYY format
+                    row[4],  # supplier
+                ),
+            )
+
+    def add_item(self):
+        """Add new item to the tree"""
+        product = self.company_entry.get()
+        stock = self.supplier_entry.get()
+        price = self.email_entry.get()
+        supplier = self.contact_entry.get()
+
+        if product and stock and price and supplier:
+            if Products().add_product(product, price, stock, supplier):
+                self.refresh_tree()
+                self.clear_entries()
+            else:
+                from tkinter import messagebox
+
+                messagebox.showerror("Cannot Add Product", "Product already exists")
+
+    def edit_item(self):
+        """Edit selected item in the tree"""
+        selected_items = self.tree.selection()
+        if not selected_items:
+            return
+
+        item = selected_items[0]
+        values = self.tree.item(item)["values"]
+        product_id = values[0]
+
+        product = self.company_entry.get()
+        stock = self.supplier_entry.get()
+        price = self.email_entry.get()
+        supplier = self.contact_entry.get()
+
+        if not all([product, stock, price, supplier]):
+            return
+
+        try:
+            price = float(price)
+            stock = int(stock)
+
+            from tkinter import messagebox
+
+            if not messagebox.askyesno(
+                "Confirm Edit", "Are you sure you want to edit this item?"
             ):
-                self.tree.insert("", "end", values=item)
+                if Products().edit_product(product_id, product, price, stock, supplier):
+                    self.refresh_tree()
+                    self.clear_entries()
+                else:
+                    messagebox.showerror("Cannot Add Product", "Product already exists")
+
+        except ValueError:
+            print("Invalid price or stock value")
+
+    def delete_item(self):
+        """Delete selected item from the tree"""
+        selected_items = self.tree.selection()
+        if not selected_items:
+            return
+
+        item = selected_items[0]
+        values = self.tree.item(item)["values"]
+        product_id = values[0]
+
+        from tkinter import messagebox
+
+        if messagebox.askyesno(
+            "Confirm Delete", "Are you sure you want to delete this item?"
+        ):
+            if Products().delete_product(product_id):
+                self.refresh_tree()
+                self.clear_entries()
+            else:
+                messagebox.showerror("Cannot Delete Product", "Product not found")
+
+    def on_search_change(self, _event=None):
+        """Handle real-time search as user types"""
+        from datetime import datetime
+
+        search_term = self.search_entry.get().lower()
+        products = Products().get_all_products()
+        if not products:
+            return
+
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        for row in products:
+            total = float(row[2]) * float(row[3])
+            total_formatted = f"₱{total:.2f}"
+            price_formatted = f"₱{float(row[2]):.2f}"
+
+            try:
+                date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
+                date_formatted = date_obj.strftime("%d/%m/%Y")
+            except (ValueError, TypeError):
+                date_formatted = row[5]
+
+            formatted_row = (
+                row[0],  # id
+                row[1],  # name
+                row[3],  # stock
+                price_formatted,  # price
+                total_formatted,  # total
+                date_formatted,  # updated date
+                row[4],  # supplier
+            )
+
+            search_row = tuple(
+                str(value).lower()
+                for value in (
+                    row[0],  # id
+                    row[1],  # name
+                    row[3],  # stock
+                    price_formatted,  # price
+                    total_formatted,  # total
+                    date_formatted,  # updated date
+                    row[4],  # supplier
+                )
+            )
+
+            if search_term == "" or any(search_term in field for field in search_row):
+                self.tree.insert("", "end", values=formatted_row)
