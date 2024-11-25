@@ -51,23 +51,24 @@ class Products:
         query = "INSERT INTO products (product_name, supplier_id, price, stock, supplier_name) VALUES (?, ?, ?, ?, ?)"
         supplier_query = "SELECT supplier_id FROM suppliers WHERE supplier_name = ?"
         sales_query = "INSERT INTO sales (product_id, product_sold) VALUES (?, ?)"
-
         try:
             with get_db_connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(supplier_query, (supplier_name,))
-                supplier_id = cursor.fetchone()[0]
-                print(supplier_id)
+                supplier_result = cursor.fetchone()
 
+                if supplier_result is None:
+                    logging.error(f"No supplier found with name: {supplier_name}")
+                    return False
+
+                supplier_id = supplier_result[0]
                 cursor.execute(
                     query, (product_name, supplier_id, price, stock, supplier_name)
                 )
                 conn.commit()
-
                 product_id = cursor.lastrowid
                 cursor.execute(sales_query, (product_id, 0))
                 conn.commit()
-
                 return True
         except sqlite3.IntegrityError as f:
             logging.error(f"Error: {f}")
