@@ -34,7 +34,7 @@ class SuppliersFrame(CTkFrame):
 
         self.tree = ttk.Treeview(
             self,
-            columns=("ID", "Company", "Supplier Name", "Email", "Contant No."),
+            columns=("ID", "Company", "Supplier Name", "Email", "Contact No."),
             show="headings",
             height=15,
         )
@@ -43,7 +43,7 @@ class SuppliersFrame(CTkFrame):
         self.tree.heading("Company", text="Company")
         self.tree.heading("Supplier Name", text="Supplier Name")
         self.tree.heading("Email", text="Email")
-        self.tree.heading("Contact No.", text="Contant No.")
+        self.tree.heading("Contact No.", text="Contact No.")
 
         self.tree.column("ID", width=70, anchor="center")
         self.tree.column("Company", width=150, anchor="center")
