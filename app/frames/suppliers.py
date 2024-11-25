@@ -143,7 +143,7 @@ class SuppliersFrame(CTkFrame):
             self.company_entry.insert(0, values[1])
             self.supplier_entry.insert(0, values[2])
             self.email_entry.insert(0, values[3])
-            self.contact_entry.insert(0, values[5])
+            self.contact_entry.insert(0, values[4])
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
