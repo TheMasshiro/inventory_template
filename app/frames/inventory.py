@@ -128,6 +128,7 @@ class InventoryFrame(CTkFrame):
 
         # Load Data
         self.refresh_tree()
+        self.load_suppliers()
 
     def clear_entries(self):
         """Clear all entry fields"""
@@ -207,6 +208,7 @@ class InventoryFrame(CTkFrame):
         if product and stock and price and supplier:
             if Products().add_product(product, price, stock, supplier):
                 self.refresh_tree()
+                self.load_suppliers()
                 self.clear_entries()
             else:
                 from tkinter import messagebox
@@ -242,6 +244,7 @@ class InventoryFrame(CTkFrame):
             ):
                 if Products().edit_product(product_id, product, price, stock, supplier):
                     self.refresh_tree()
+                    self.load_suppliers()
                     self.clear_entries()
                 else:
                     messagebox.showerror("Cannot Add Product", "Product already exists")
@@ -266,6 +269,7 @@ class InventoryFrame(CTkFrame):
         ):
             if Products().delete_product(product_id):
                 self.refresh_tree()
+                self.load_suppliers()
                 self.clear_entries()
             else:
                 messagebox.showerror("Cannot Delete Product", "Product not found")
