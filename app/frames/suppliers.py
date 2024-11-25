@@ -3,7 +3,7 @@ from tkinter import ttk
 from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel
 
 from app.frames.style import configure_treeview_style
-from app.models.products import Products
+from app.models.suppliers import Suppliers
 
 
 class SuppliersFrame(CTkFrame):
@@ -20,7 +20,7 @@ class SuppliersFrame(CTkFrame):
         self.top_frame.grid_columnconfigure(1, weight=1)
 
         self.title_label = CTkLabel(
-            self.top_frame, text="Product List", font=("Arial Bold", 20)
+            self.top_frame, text="Supplier List", font=("Arial Bold", 20)
         )
         self.title_label.grid(row=0, column=0, sticky="w", padx=5)
 
@@ -91,7 +91,7 @@ class SuppliersFrame(CTkFrame):
         self.button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
         self.add_button = CTkButton(
-            self.button_frame, text="Add Item", command=self.add_item, width=120
+            self.button_frame, text="Add Item", command=self.add_supplier, width=120
         )
         self.add_button.grid(row=0, column=0, padx=5)
 
@@ -147,10 +147,8 @@ class SuppliersFrame(CTkFrame):
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
-        from datetime import datetime
-
-        products = Products().get_all_products()
-        if not products:
+        all_suppliers = Suppliers().get_all_suppliers()
+        if not all_suppliers:
             for item in self.tree.get_children():
                 self.tree.delete(item)
             return
@@ -158,46 +156,43 @@ class SuppliersFrame(CTkFrame):
         for item in self.tree.get_children():
             self.tree.delete(item)
 
-        for row in products:
-            total = float(row[2]) * float(row[3])
-            total_formatted = f"₱{total:.2f}"
-            price_formatted = f"₱{float(row[2]):.2f}"
-
-            try:
-                date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
-                date_formatted = date_obj.strftime("%d/%m/%Y")
-            except (ValueError, TypeError):
-                date_formatted = row[5]
-
-            self.tree.insert(
-                "",
-                "end",
-                values=(
-                    row[0],  # id
-                    row[1],  # name
-                    row[3],  # stock
-                    price_formatted,  # price
-                    total_formatted,  # total
-                    date_formatted,  # updated date in DD/MM/YYYY format
-                    row[4],  # supplier
-                ),
+        for row in all_suppliers:
+            formatted_row = (
+                row[0],  # id
+                row[1],  # company
+                row[2],  # supplier
+                row[3],  # email
+                row[4],  # contact
             )
+            self.tree.insert("", "end", values=formatted_row)
 
-    def add_item(self):
-        """Add new item to the tree"""
-        product = self.company_entry.get()
-        stock = self.supplier_entry.get()
-        price = self.email_entry.get()
-        supplier = self.contact_entry.get()
+    def add_supplier(self):
+        """Add new supplier to the tree"""
+        company = self.company_entry.get()
+        supplier = self.supplier_entry.get()
+        email = self.email_entry.get()
+        contact = self.contact_entry.get()
+        from tkinter import messagebox
 
-        if product and stock and price and supplier:
-            if Products().add_product(product, price, stock, supplier):
-                self.refresh_tree()
-                self.clear_entries()
-            else:
-                from tkinter import messagebox
+        valid_email = "@" in email and "." in email
+        valid_contact = (
+            contact.isdigit()
+            and len(contact) == 11
+            and contact[0] == "0"
+            and contact[1] == "9"
+        )
 
-                messagebox.showerror("Cannot Add Product", "Product already exists")
+        if valid_email and valid_contact:
+            messagebox.showerror("Invalid Email", "Invalid email and contact number")
+        else:
+            if company and supplier and email and contact:
+                if Suppliers().add_supplier(company, email, supplier, contact):
+                    self.refresh_tree()
+                    self.clear_entries()
+                else:
+                    messagebox.showerror(
+                        "Cannot Add Supplier", "Supplier already exists"
+                    )
 
     def edit_item(self):
         """Edit selected item in the tree"""
@@ -207,33 +202,49 @@ class SuppliersFrame(CTkFrame):
 
         item = selected_items[0]
         values = self.tree.item(item)["values"]
-        product_id = values[0]
+        supplier_id = values[0]
 
-        product = self.company_entry.get()
-        stock = self.supplier_entry.get()
-        price = self.email_entry.get()
-        supplier = self.contact_entry.get()
+        company = self.company_entry.get()
+        supplier = self.supplier_entry.get()
+        email = self.email_entry.get()
+        contact = self.contact_entry.get()
+        from tkinter import messagebox
 
-        if not all([product, stock, price, supplier]):
-            return
+        valid_email = "@" in email and "." in email
+        valid_contact = (
+            contact.isdigit()
+            and len(contact) == 11
+            and contact[0] == "0"
+            and contact[1] == "9"
+        )
 
-        try:
-            price = float(price)
-            stock = int(stock)
+        if valid_email and valid_contact:
+            messagebox.showerror("Invalid Email", "Invalid email and contact number")
+        else:
+            if not all([company, supplier, email, contact]):
+                return
 
-            from tkinter import messagebox
+            try:
+                email = float(email)
+                supplier = int(supplier)
 
-            if not messagebox.askyesno(
-                "Confirm Edit", "Are you sure you want to edit this item?"
-            ):
-                if Products().edit_product(product_id, product, price, stock, supplier):
-                    self.refresh_tree()
-                    self.clear_entries()
-                else:
-                    messagebox.showerror("Cannot Add Product", "Product already exists")
+                if not messagebox.askyesno(
+                    "Confirm Edit", "Are you sure you want to edit this item?"
+                ):
+                    if Suppliers().edit_supplier(
+                        supplier_id, company, email, supplier, contact
+                    ):
+                        self.refresh_tree()
+                        self.clear_entries()
+                    else:
+                        messagebox.showerror(
+                            "Cannot Edit Supplier", "Supplier not found"
+                        )
 
-        except ValueError:
-            print("Invalid price or stock value")
+            except ValueError:
+                messagebox.showerror(
+                    "Invalid Input", "Invalid email and contact number"
+                )
 
     def delete_item(self):
         """Delete selected item from the tree"""
@@ -243,14 +254,14 @@ class SuppliersFrame(CTkFrame):
 
         item = selected_items[0]
         values = self.tree.item(item)["values"]
-        product_id = values[0]
+        supplier_id = values[0]
 
         from tkinter import messagebox
 
         if messagebox.askyesno(
             "Confirm Delete", "Are you sure you want to delete this item?"
         ):
-            if Products().delete_product(product_id):
+            if Suppliers().delete_supplier(supplier_id):
                 self.refresh_tree()
                 self.clear_entries()
             else:
@@ -258,47 +269,33 @@ class SuppliersFrame(CTkFrame):
 
     def on_search_change(self, _event=None):
         """Handle real-time search as user types"""
-        from datetime import datetime
-
         search_term = self.search_entry.get().lower()
-        products = Products().get_all_products()
-        if not products:
+        all_supplier = Suppliers().get_all_suppliers()
+        if not all_supplier:
+            for item in self.tree.get_children():
+                self.tree.delete(item)
             return
 
         for item in self.tree.get_children():
             self.tree.delete(item)
 
-        for row in products:
-            total = float(row[2]) * float(row[3])
-            total_formatted = f"₱{total:.2f}"
-            price_formatted = f"₱{float(row[2]):.2f}"
-
-            try:
-                date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
-                date_formatted = date_obj.strftime("%d/%m/%Y")
-            except (ValueError, TypeError):
-                date_formatted = row[5]
-
+        for row in all_supplier:
             formatted_row = (
                 row[0],  # id
-                row[1],  # name
-                row[3],  # stock
-                price_formatted,  # price
-                total_formatted,  # total
-                date_formatted,  # updated date
-                row[4],  # supplier
+                row[1],  # company
+                row[2],  # supplier
+                row[3],  # email
+                row[4],  # contact
             )
 
             search_row = tuple(
                 str(value).lower()
                 for value in (
                     row[0],  # id
-                    row[1],  # name
-                    row[3],  # stock
-                    price_formatted,  # price
-                    total_formatted,  # total
-                    date_formatted,  # updated date
-                    row[4],  # supplier
+                    row[1],  # company
+                    row[2],  # supplier
+                    row[3],  # email
+                    row[4],  # contact
                 )
             )
 
