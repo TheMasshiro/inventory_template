@@ -83,9 +83,19 @@ class InventoryFrame(CTkFrame):
         self.price_entry = CTkEntry(self.entry_frame, width=120)
         self.price_entry.grid(row=0, column=5, padx=5, pady=5)
 
+        # Load Suppliers
+        supplier_names = Suppliers().get_all_supplier_names()
+        if not supplier_names:
+            self.load_suppliers()
+        else:
+            supplier_names = [name[0] for name in supplier_names]
+        self.load_suppliers()
+
         self.supplier_label = CTkLabel(self.entry_frame, text="Supplier:")
         self.supplier_label.grid(row=0, column=6, padx=5, pady=5)
-        self.supplier_options = CTkOptionMenu(self.entry_frame, width=120)
+        self.supplier_options = CTkOptionMenu(
+            self.entry_frame, values=supplier_names, width=120
+        )
         self.supplier_options.grid(row=0, column=7, padx=5, pady=5)
 
         self.hsb.grid(row=3, column=0, sticky="ew", padx=10)
@@ -128,7 +138,6 @@ class InventoryFrame(CTkFrame):
 
         # Load Data
         self.refresh_tree()
-        self.load_suppliers()
 
     def clear_entries(self):
         """Clear all entry fields"""
@@ -152,13 +161,13 @@ class InventoryFrame(CTkFrame):
             self.supplier_options.set(values[6])
 
     def load_suppliers(self):
-        """Load suppliers to the dropdown"""
+        """Load suppliers to the option menu"""
+        global supplier_names
         suppliers = Suppliers().get_all_suppliers()
         if not suppliers:
             return
 
-        for supplier in suppliers:
-            self.supplier_options.add_option(supplier[1])
+        supplier_names = [supplier[1] for supplier in suppliers]
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
