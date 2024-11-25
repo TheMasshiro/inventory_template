@@ -160,8 +160,8 @@ class SuppliersFrame(CTkFrame):
             formatted_row = (
                 row[0],  # id
                 row[1],  # company
-                row[2],  # supplier
-                row[3],  # email
+                row[3],  # supplier
+                row[2],  # email
                 row[4],  # contact
             )
             self.tree.insert("", "end", values=formatted_row)
@@ -283,8 +283,8 @@ class SuppliersFrame(CTkFrame):
             formatted_row = (
                 row[0],  # id
                 row[1],  # company
-                row[2],  # supplier
-                row[3],  # email
+                row[3],  # supplier
+                row[2],  # email
                 row[4],  # contact
             )
 
@@ -293,8 +293,8 @@ class SuppliersFrame(CTkFrame):
                 for value in (
                     row[0],  # id
                     row[1],  # company
-                    row[2],  # supplier
-                    row[3],  # email
+                    row[3],  # supplier
+                    row[2],  # email
                     row[4],  # contact
                 )
             )
