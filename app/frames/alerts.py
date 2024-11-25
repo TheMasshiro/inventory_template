@@ -57,22 +57,17 @@ class AlertsFrame(customtkinter.CTkFrame):
         self.tree.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)
         self.vsb.grid(row=1, column=1, sticky="ns", pady=10)
 
-        # Entry Frame with centering
-        self.entry_frame = CTkFrame(self, fg_color="transparent")
-        self.entry_frame.grid(row=2, column=0, sticky="ew", padx=10, pady=10)
-        self.entry_frame.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
-
-        self.product_name = CTkLabel(self.entry_frame, text="Product:")
-        self.product_name.grid(row=0, column=0, padx=5, pady=5)
-        self.product_options = CTkOptionMenu(self.entry_frame, width=120)
-        self.product_options.grid(row=0, column=1, padx=5, pady=5)
-
-        self.sold_label = CTkLabel(self.entry_frame, text="Sold:")
-        self.sold_label.grid(row=0, column=2, padx=5, pady=5)
-        self.sold_entry = CTkEntry(self.entry_frame, width=120)
-        self.sold_entry.grid(row=0, column=3, padx=5, pady=5)
-
         self.hsb.grid(row=3, column=0, sticky="ew", padx=10)
+
+        # Button Frame with centering
+        self.button_frame = CTkFrame(self, fg_color="transparent")
+        self.button_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=10)
+        self.button_frame.grid_columnconfigure((0, 1, 2), weight=1)
+
+        self.refresh_button = CTkButton(
+            self.button_frame, text="Edit Sale", command=self.refresh_all, width=120
+        )
+        self.refresh_button.grid(row=0, column=0, padx=5)
 
         # Load Data
         self.refresh_tree()
@@ -80,12 +75,6 @@ class AlertsFrame(customtkinter.CTkFrame):
     def refresh_all(self):
         """Refresh all data in the frame"""
         self.refresh_tree()
-        self.clear_entries()
-
-    def clear_entries(self):
-        """Clear all entry fields"""
-        self.product_options.set("")
-        self.sold_entry.delete(0, "end")
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
@@ -106,19 +95,9 @@ class AlertsFrame(customtkinter.CTkFrame):
             )
             if row[4] < 10:
                 formatted_row += ("Low Stock",)
+            elif row[4] <= 0:
+                formatted_row += ("Out of Stock",)
             self.tree.insert("", "end", values=formatted_row)
-
-    def on_tree_select(self, event):
-        """Fill entry boxes when a row is selected"""
-        selected_items = self.tree.selection()
-        if selected_items:
-            item = selected_items[0]
-            values = self.tree.item(item)["values"]
-
-            self.clear_entries()
-
-            self.product_options.set(values[1])
-            self.sold_entry.insert(0, str(values[2]))
 
     def on_search_change(self, _event=None):
         """Handle real-time search as user types"""
@@ -138,6 +117,10 @@ class AlertsFrame(customtkinter.CTkFrame):
                 row[2],  # product
                 row[4],  # stock
             )
+            if row[4] < 10:
+                formatted_row += ("Low Stock",)
+            elif row[4] <= 0:
+                formatted_row += ("Out of Stock",)
 
             search_row = tuple(
                 str(value).lower()
