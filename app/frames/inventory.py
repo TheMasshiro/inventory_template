@@ -234,7 +234,6 @@ class InventoryFrame(CTkFrame):
         supplier = self.supplier_options.get()
 
         if not all([product, stock, price, supplier]):
-            print("All fields are required")
             return
 
         try:
@@ -243,7 +242,7 @@ class InventoryFrame(CTkFrame):
 
             from tkinter import messagebox
 
-            if not messagebox.askyesno(
+            if messagebox.askyesno(
                 "Confirm Edit", "Are you sure you want to edit this item?"
             ):
                 if Products().edit_product(product_id, product, price, stock, supplier):
@@ -252,8 +251,6 @@ class InventoryFrame(CTkFrame):
                     self.clear_entries()
                 else:
                     messagebox.showerror("Cannot Add Product", "Product already exists")
-            else:
-                print("Edit cancelled")
 
         except ValueError:
             print("Invalid price or stock value")
