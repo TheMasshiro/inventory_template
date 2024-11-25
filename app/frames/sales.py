@@ -77,22 +77,12 @@ class SalesFrame(customtkinter.CTkFrame):
         # Button Frame with centering
         self.button_frame = CTkFrame(self, fg_color="transparent")
         self.button_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=10)
-        self.button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
+        self.button_frame.grid_columnconfigure((0, 1, 2), weight=1)
 
         self.edit_button = CTkButton(
             self.button_frame, text="Edit Sale", command=self.edit_item, width=120
         )
         self.edit_button.grid(row=0, column=0, padx=5)
-
-        self.delete_button = CTkButton(
-            self.button_frame,
-            text="Delete Sale",
-            command=self.delete_item,
-            fg_color="red",
-            hover_color="darkred",
-            width=120,
-        )
-        self.delete_button.grid(row=0, column=1, padx=5)
 
         self.clear_button = CTkButton(
             self.button_frame,
@@ -100,7 +90,7 @@ class SalesFrame(customtkinter.CTkFrame):
             command=self.clear_entries,
             width=120,
         )
-        self.clear_button.grid(row=0, column=2, padx=5)
+        self.clear_button.grid(row=0, column=1, padx=5)
 
         self.refresh_button = CTkButton(
             self.button_frame,
@@ -108,7 +98,7 @@ class SalesFrame(customtkinter.CTkFrame):
             command=self.refresh_all,
             width=120,
         )
-        self.refresh_button.grid(row=0, column=3, padx=5)
+        self.refresh_button.grid(row=0, column=2, padx=5)
 
         # Bind selection event to tree
         self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
@@ -197,34 +187,16 @@ class SalesFrame(customtkinter.CTkFrame):
                     supplier_id,
                     sold,
                 ):
+                    print("HELLO")
                     self.refresh_tree()
                     self.clear_entries()
                 else:
                     messagebox.showerror("Cannot Edit Sales", "Sales not found")
+            else:
+                print("NO")
 
         except ValueError:
             messagebox.showerror("Invalid Input", "Invalid email and contact number")
-
-    def delete_item(self):
-        """Delete selected supplier from the tree"""
-        selected_items = self.tree.selection()
-        if not selected_items:
-            return
-
-        item = selected_items[0]
-        values = self.tree.item(item)["values"]
-        supplier_id = values[0]
-
-        from tkinter import messagebox
-
-        if messagebox.askyesno(
-            "Confirm Delete", "Are you sure you want to delete this item?"
-        ):
-            if Sales().delete_sales(supplier_id):
-                self.refresh_tree()
-                self.clear_entries()
-            else:
-                messagebox.showerror("Cannot Delete Product", "Product not found")
 
     def on_search_change(self, _event=None):
         """Handle real-time search as user types"""
