@@ -164,8 +164,12 @@ class InventoryFrame(CTkFrame):
         """Load suppliers to the option menu"""
         global supplier_names
         suppliers = Suppliers().get_all_suppliers()
+        print(suppliers)
         if not suppliers:
             return
+
+        for supplier in suppliers:
+            print(supplier)
 
         supplier_names = [supplier[1] for supplier in suppliers]
 
