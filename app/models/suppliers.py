@@ -5,6 +5,20 @@ from app.db import get_db_connection
 
 
 class Suppliers:
+    def get_all_supplier_names(self):
+        query = "SELECT supplier_name FROM suppliers"
+
+        try:
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(query)
+                supplier_names = cursor.fetchall()
+
+                return supplier_names
+        except sqlite3.DatabaseError as e:
+            logging.error("Database error: %s", e)
+            return None
+
     def get_all_suppliers(self):
         query = "SELECT * FROM suppliers"
 
@@ -52,7 +66,7 @@ class Suppliers:
             return False
 
     def edit_supplier(self, supplier_id, company_name, supplier_name, email, phone):
-        query = "UPDATE suppliers SET company_name = ?, supplier_name = ?, email = ?, phone = ? WHERE id = ?"
+        query = "UPDATE suppliers SET company_name = ?, supplier_name = ?, email = ?, phone = ? WHERE supplier_id = ?"
 
         try:
             with get_db_connection() as conn:
@@ -72,7 +86,7 @@ class Suppliers:
             return False
 
     def delete_supplier(self, supplier_id):
-        query = "DELETE FROM suppliers WHERE id = ?"
+        query = "DELETE FROM suppliers WHERE supplier_id = ?"
 
         try:
             with get_db_connection() as conn:
