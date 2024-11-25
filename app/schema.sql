@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS suppliers(
 
 CREATE TABLE IF NOT EXISTS products (
     product_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    -- supplier_id INTEGER NOT NULL,
+    supplier_id INTEGER NOT NULL,
     product_name TEXT NOT NULL UNIQUE,
     price DECIMAL(10,2) NOT NULL,
     stock INTEGER NOT NULL DEFAULT 0,
     supplier_name TEXT NOT NULL,
-    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-    -- FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id) ON DELETE CASCADE
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS sales(
