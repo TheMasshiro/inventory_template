@@ -64,10 +64,12 @@ class SalesFrame(customtkinter.CTkFrame):
 
         # Get Product Name
         product_names = Sales().get_all_product_name()
-        if product_names:
-            product_names = [product[0] for product in product_names]
-        else:
+        if not product_names:
             product_names = []
+        product_names = [product[0] for product in product_names]
+
+        if not product_names:
+            product_names = ["No Products"]
 
         self.product_name = CTkLabel(self.entry_frame, text="Product:")
         self.product_name.grid(row=0, column=0, padx=5, pady=5)

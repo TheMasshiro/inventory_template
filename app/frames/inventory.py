@@ -88,6 +88,9 @@ class InventoryFrame(CTkFrame):
         if not supplier_names:
             supplier_names = []
         supplier_names = [name[0] for name in supplier_names]
+
+        if not supplier_names:
+            supplier_names = ["No Suppliers Found"]
         print(supplier_names)
 
         self.supplier_label = CTkLabel(self.entry_frame, text="Supplier:")
