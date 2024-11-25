@@ -72,7 +72,7 @@ class SalesFrame(customtkinter.CTkFrame):
         self.product_name = CTkLabel(self.entry_frame, text="Product:")
         self.product_name.grid(row=0, column=0, padx=5, pady=5)
         self.product_options = CTkOptionMenu(
-            self.entry_frame, value=product_names, width=120
+            self.entry_frame, values=product_names, width=120
         )
         self.product_options.grid(row=0, column=1, padx=5, pady=5)
 
