@@ -162,12 +162,12 @@ class InventoryFrame(CTkFrame):
 
     def load_suppliers(self):
         """Load suppliers to the option menu"""
-        global supplier_names
         suppliers = Suppliers().get_all_suppliers()
         if not suppliers:
             return
 
         supplier_names = [supplier[1] for supplier in suppliers]
+        self.supplier_options.configure(values=supplier_names)
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""

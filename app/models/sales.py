@@ -32,7 +32,7 @@ class Sales:
             return None
 
     def get_all_sales(self):
-        query = "SELECT sales.sale_id, products.product_name, sales.product_sold, product.supplier_name FROM sales JOIN products ON sales.product_id = products.product_id"
+        query = "SELECT sales.sale_id, products.product_name, sales.product_sold, products.supplier_name FROM sales JOIN products ON sales.product_id = products.product_id"
 
         try:
             with get_db_connection() as conn:
