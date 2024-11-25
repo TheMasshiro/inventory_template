@@ -225,9 +225,6 @@ class SuppliersFrame(CTkFrame):
                 return
 
             try:
-                email = float(email)
-                supplier = int(supplier)
-
                 if messagebox.askyesno(
                     "Confirm Edit", "Are you sure you want to edit this item?"
                 ):
