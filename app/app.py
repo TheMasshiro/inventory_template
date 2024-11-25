@@ -10,6 +10,7 @@ from app.frames.suppliers import SuppliersFrame
 
 
 class AppTop(customtkinter.CTk):
+    # Tita 1
     def __init__(self):
         super().__init__()
 
@@ -363,6 +364,7 @@ class AppRight(customtkinter.CTk):
 
 
 class AppLeft(customtkinter.CTk):
+    # Tita 2
     def __init__(self):
         super().__init__()
 
