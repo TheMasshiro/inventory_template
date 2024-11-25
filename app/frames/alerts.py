@@ -65,7 +65,7 @@ class AlertsFrame(customtkinter.CTkFrame):
         self.button_frame.grid_columnconfigure((0, 1, 2), weight=1)
 
         self.refresh_button = CTkButton(
-            self.button_frame, text="Edit Sale", command=self.refresh_all, width=120
+            self.button_frame, text="Refresh", command=self.refresh_all, width=120
         )
         self.refresh_button.grid(row=0, column=0, padx=5)
 
