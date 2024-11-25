@@ -177,9 +177,9 @@ class InventoryFrame(CTkFrame):
             self.tree.delete(item)
 
         for row in products:
-            total = float(row[2]) * float(row[3])
+            total = float(row[3]) * float(row[4])
             total_formatted = f"₱{total:.2f}"
-            price_formatted = f"₱{float(row[2]):.2f}"
+            price_formatted = f"₱{float(row[3]):.2f}"
 
             try:
                 date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
