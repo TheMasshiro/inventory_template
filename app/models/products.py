@@ -5,6 +5,20 @@ from app.db import get_db_connection
 
 
 class Products:
+    def get_low_stock_products(self):
+        query = "SELECT * FROM products WHERE stock < 10 ORDER BY stock DESC"
+
+        try:
+            with get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(query)
+                products = cursor.fetchall()
+
+                return products
+        except sqlite3.DatabaseError as e:
+            logging.error(f"Error: {e}")
+            return None
+
     def get_all_products(self):
         query = "SELECT * FROM products"
 
