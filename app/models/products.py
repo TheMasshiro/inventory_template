@@ -49,7 +49,7 @@ class Products:
 
     def add_product(self, product_name, price, stock, supplier_name):
         query = "INSERT INTO products (product_name, supplier_id, price, stock, supplier_name) VALUES (?, ?, ?, ?, ?)"
-        supplier_query = "SELECT supplier_id FROM suppliers WHERE supplier_name = ?"
+        supplier_query = "SELECT supplier_id FROM suppliers WHERE company_name = ?"
         sales_query = "INSERT INTO sales (product_id, product_sold) VALUES (?, ?)"
         try:
             with get_db_connection() as conn:

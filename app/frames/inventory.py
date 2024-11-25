@@ -160,7 +160,7 @@ class InventoryFrame(CTkFrame):
         if not suppliers:
             return
 
-        supplier_names = [supplier[3] for supplier in suppliers]
+        supplier_names = [supplier[1] for supplier in suppliers]
         self.supplier_options.configure(values=supplier_names)
 
     def refresh_tree(self):
