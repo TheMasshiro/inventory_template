@@ -167,7 +167,7 @@ class InventoryFrame(CTkFrame):
         if not suppliers:
             return
 
-        supplier_names = [supplier[2] for supplier in suppliers]
+        supplier_names = [supplier[1] for supplier in suppliers]
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
