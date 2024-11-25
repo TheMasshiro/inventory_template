@@ -85,6 +85,8 @@ class Products:
                 )
                 conn.commit()
 
+                print(cursor.rowcount)
+
                 return True
         except sqlite3.IntegrityError as f:
             logging.error(f"Error: {f}")
