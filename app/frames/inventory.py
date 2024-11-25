@@ -96,18 +96,18 @@ class InventoryFrame(CTkFrame):
         self.button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
         self.add_button = CTkButton(
-            self.button_frame, text="Add Item", command=self.add_item, width=120
+            self.button_frame, text="Add Product", command=self.add_item, width=120
         )
         self.add_button.grid(row=0, column=0, padx=5)
 
         self.edit_button = CTkButton(
-            self.button_frame, text="Edit Item", command=self.edit_item, width=120
+            self.button_frame, text="Edit Product", command=self.edit_item, width=120
         )
         self.edit_button.grid(row=0, column=1, padx=5)
 
         self.delete_button = CTkButton(
             self.button_frame,
-            text="Delete Item",
+            text="Delete Product",
             command=self.delete_item,
             fg_color="red",
             hover_color="darkred",
@@ -128,6 +128,7 @@ class InventoryFrame(CTkFrame):
 
         # Load Data
         self.refresh_tree()
+        self.load_suppliers()
 
     def clear_entries(self):
         """Clear all entry fields"""
