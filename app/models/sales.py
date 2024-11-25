@@ -6,7 +6,7 @@ from app.db import get_db_connection
 
 class Sales:
     def get_product_id(self, product_name):
-        query = "SELECT id FROM products WHERE product_name = ?"
+        query = "SELECT product_id FROM products WHERE product_name = ?"
         try:
             with get_db_connection() as conn:
                 cursor = conn.cursor()
@@ -32,7 +32,7 @@ class Sales:
             return None
 
     def get_all_sales(self):
-        query = "SELECT sales.id, products.product_name, sales.product_sold, product.supplier_name FROM sales JOIN products ON sales.product_id = products.id"
+        query = "SELECT sales.sale_id, products.product_name, sales.product_sold, product.supplier_name FROM sales JOIN products ON sales.product_id = products.product_id"
 
         try:
             with get_db_connection() as conn:
