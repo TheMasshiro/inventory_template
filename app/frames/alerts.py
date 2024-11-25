@@ -21,7 +21,7 @@ class AlertsFrame(customtkinter.CTkFrame):
         self.top_frame.grid_columnconfigure(1, weight=1)
 
         self.title_label = CTkLabel(
-            self.top_frame, text="Sales List", font=("Arial Bold", 20)
+            self.top_frame, text="Inventory Alerts", font=("Arial Bold", 20)
         )
         self.title_label.grid(row=0, column=0, sticky="w", padx=5)
 
