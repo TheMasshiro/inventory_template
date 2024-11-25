@@ -164,14 +164,10 @@ class InventoryFrame(CTkFrame):
         """Load suppliers to the option menu"""
         global supplier_names
         suppliers = Suppliers().get_all_suppliers()
-        print(suppliers)
         if not suppliers:
             return
 
-        for supplier in suppliers:
-            print(supplier)
-
-        supplier_names = [supplier[1] for supplier in suppliers]
+        supplier_names = [supplier[2] for supplier in suppliers]
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
