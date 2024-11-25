@@ -141,9 +141,9 @@ class SuppliersFrame(CTkFrame):
             self.clear_entries()
 
             self.company_entry.insert(0, values[1])
-            self.supplier_entry.insert(0, str(values[2]))
-            self.email_entry.insert(0, str(values[3]).replace("₱", ""))
-            self.contact_entry.insert(0, values[6])
+            self.supplier_entry.insert(0, values[2])
+            self.email_entry.insert(0, values[3])
+            self.contact_entry.insert(0, values[5])
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
@@ -228,7 +228,7 @@ class SuppliersFrame(CTkFrame):
                 email = float(email)
                 supplier = int(supplier)
 
-                if not messagebox.askyesno(
+                if messagebox.askyesno(
                     "Confirm Edit", "Are you sure you want to edit this item?"
                 ):
                     if Suppliers().edit_supplier(

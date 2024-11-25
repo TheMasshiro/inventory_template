@@ -139,6 +139,7 @@ class InventoryFrame(CTkFrame):
         self.stock_entry.delete(0, "end")
         self.price_entry.delete(0, "end")
         self.supplier_options.set("")
+        self.supplier_options.configure(state="normal")
 
     def on_tree_select(self, event):
         """Fill entry boxes when a row is selected"""
@@ -153,6 +154,7 @@ class InventoryFrame(CTkFrame):
             self.stock_entry.insert(0, str(values[2]))
             self.price_entry.insert(0, str(values[3]).replace("₱", ""))
             self.supplier_options.set(values[6])
+            self.supplier_options.configure(state="disabled")
 
     def load_suppliers(self):
         """Load suppliers to the option menu"""
