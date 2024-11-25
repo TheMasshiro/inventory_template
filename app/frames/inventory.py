@@ -128,20 +128,6 @@ class InventoryFrame(CTkFrame):
 
         # Load Data
         self.refresh_tree()
-        self.refresh_options()
-
-    def refresh_options(self):
-        """Refresh supplier options"""
-        supplier_names = Suppliers().get_all_supplier_names()
-        if not supplier_names:
-            supplier_names = []
-        supplier_names = [name[0] for name in supplier_names]
-
-        if not supplier_names:
-            supplier_names = ["No Suppliers Found"]
-
-        self.supplier_options.set("")
-        self.supplier_options._values(supplier_names)
 
     def clear_entries(self):
         """Clear all entry fields"""
@@ -163,6 +149,15 @@ class InventoryFrame(CTkFrame):
             self.stock_entry.insert(0, str(values[2]))
             self.price_entry.insert(0, str(values[3]).replace("₱", ""))
             self.supplier_options.set(values[6])
+
+    def load_suppliers(self):
+        """Load suppliers to the dropdown"""
+        suppliers = Suppliers().get_all_suppliers()
+        if not suppliers:
+            return
+
+        for supplier in suppliers:
+            self.supplier_options.add_option(supplier[1])
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
