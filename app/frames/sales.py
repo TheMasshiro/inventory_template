@@ -192,8 +192,6 @@ class SalesFrame(customtkinter.CTkFrame):
                     self.clear_entries()
                 else:
                     messagebox.showerror("Cannot Edit Sales", "Sales not found")
-            else:
-                print("NO")
 
         except ValueError:
             messagebox.showerror("Invalid Input", "Invalid email and contact number")
