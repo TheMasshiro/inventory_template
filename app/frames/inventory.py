@@ -182,22 +182,22 @@ class InventoryFrame(CTkFrame):
             price_formatted = f"₱{float(row[3]):.2f}"
 
             try:
-                date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
+                date_obj = datetime.strptime(row[6], "%Y-%m-%d %H:%M:%S")
                 date_formatted = date_obj.strftime("%d/%m/%Y")
             except (ValueError, TypeError):
-                date_formatted = row[5]
+                date_formatted = row[6]
 
             self.tree.insert(
                 "",
                 "end",
                 values=(
                     row[0],  # id
-                    row[1],  # name
-                    row[3],  # stock
+                    row[2],  # name
+                    row[4],  # stock
                     price_formatted,  # price
                     total_formatted,  # total
                     date_formatted,  # updated date in DD/MM/YYYY format
-                    row[4],  # supplier
+                    row[5],  # supplier
                 ),
             )
 
@@ -290,36 +290,36 @@ class InventoryFrame(CTkFrame):
             self.tree.delete(item)
 
         for row in products:
-            total = float(row[2]) * float(row[3])
+            total = float(row[3]) * float(row[4])
             total_formatted = f"₱{total:.2f}"
-            price_formatted = f"₱{float(row[2]):.2f}"
+            price_formatted = f"₱{float(row[3]):.2f}"
 
             try:
-                date_obj = datetime.strptime(row[5], "%Y-%m-%d %H:%M:%S")
+                date_obj = datetime.strptime(row[6], "%Y-%m-%d %H:%M:%S")
                 date_formatted = date_obj.strftime("%d/%m/%Y")
             except (ValueError, TypeError):
-                date_formatted = row[5]
+                date_formatted = row[6]
 
             formatted_row = (
                 row[0],  # id
-                row[1],  # name
-                row[3],  # stock
+                row[2],  # name
+                row[4],  # stock
                 price_formatted,  # price
                 total_formatted,  # total
                 date_formatted,  # updated date
-                row[4],  # supplier
+                row[5],  # supplier
             )
 
             search_row = tuple(
                 str(value).lower()
                 for value in (
                     row[0],  # id
-                    row[1],  # name
-                    row[3],  # stock
+                    row[2],  # name
+                    row[4],  # stock
                     price_formatted,  # price
                     total_formatted,  # total
                     date_formatted,  # updated date
-                    row[4],  # supplier
+                    row[5],  # supplier
                 )
             )
 
