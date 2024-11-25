@@ -62,20 +62,9 @@ class SalesFrame(customtkinter.CTkFrame):
         self.entry_frame.grid(row=2, column=0, sticky="ew", padx=10, pady=10)
         self.entry_frame.grid_columnconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
 
-        # Get Product Name
-        product_names = Sales().get_all_product_name()
-        if not product_names:
-            product_names = []
-        product_names = [product[0] for product in product_names]
-
-        if not product_names:
-            product_names = ["No Products"]
-
         self.product_name = CTkLabel(self.entry_frame, text="Product:")
         self.product_name.grid(row=0, column=0, padx=5, pady=5)
-        self.product_options = CTkOptionMenu(
-            self.entry_frame, values=product_names, width=120
-        )
+        self.product_options = CTkOptionMenu(self.entry_frame, width=120)
         self.product_options.grid(row=0, column=1, padx=5, pady=5)
 
         self.sold_label = CTkLabel(self.entry_frame, text="Sold:")
@@ -88,7 +77,7 @@ class SalesFrame(customtkinter.CTkFrame):
         # Button Frame with centering
         self.button_frame = CTkFrame(self, fg_color="transparent")
         self.button_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=10)
-        self.button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
+        self.button_frame.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
 
         self.add_button = CTkButton(
             self.button_frame, text="Add Item", command=self.add_supplier, width=120
@@ -118,11 +107,26 @@ class SalesFrame(customtkinter.CTkFrame):
         )
         self.clear_button.grid(row=0, column=3, padx=5)
 
+        self.refresh_button = CTkButton(
+            self.button_frame,
+            text="Refresh",
+            command=self.refresh_all,
+            width=120,
+        )
+        self.refresh_button.grid(row=0, column=4, padx=5)
+
         # Bind selection event to tree
         self.tree.bind("<<TreeviewSelect>>", self.on_tree_select)
 
         # Load Data
         self.refresh_tree()
+        self.load_products()
+
+    def refresh_all(self):
+        """Refresh all data in the frame"""
+        self.refresh_tree()
+        self.load_products()
+        self.clear_entries()
 
     def clear_entries(self):
         """Clear all entry fields"""
@@ -140,6 +144,18 @@ class SalesFrame(customtkinter.CTkFrame):
 
             self.product_options.set(values[1])
             self.sold_entry.insert(0, str(values[2]))
+
+    def load_products(self):
+        """Load all products into the option menu"""
+        product_names = Sales().get_all_product_name()
+        if not product_names:
+            product_names = []
+        product_names = [product[0] for product in product_names]
+
+        if not product_names:
+            product_names = ["No Products"]
+
+        self.product_options.configure(values=product_names)
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
