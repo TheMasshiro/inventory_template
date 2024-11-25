@@ -1,7 +1,10 @@
-from customtkinter import CTkFrame, CTkLabel, CTkButton, CTkEntry
 from tkinter import ttk
+
+from customtkinter import CTkButton, CTkEntry, CTkFrame, CTkLabel, CTkOptionMenu
+
 from app.frames.style import configure_treeview_style
 from app.models.products import Products
+from app.models.suppliers import Suppliers
 
 
 class InventoryFrame(CTkFrame):
@@ -80,10 +83,18 @@ class InventoryFrame(CTkFrame):
         self.price_entry = CTkEntry(self.entry_frame, width=120)
         self.price_entry.grid(row=0, column=5, padx=5, pady=5)
 
+        # Get all supplier names
+        supplier_names = Suppliers().get_all_supplier_names()
+        if not supplier_names:
+            supplier_names = []
+        supplier_names = [name[0] for name in supplier_names]
+
         self.supplier_label = CTkLabel(self.entry_frame, text="Supplier:")
         self.supplier_label.grid(row=0, column=6, padx=5, pady=5)
-        self.supplier_entry = CTkEntry(self.entry_frame, width=120)
-        self.supplier_entry.grid(row=0, column=7, padx=5, pady=5)
+        self.supplier_options = CTkOptionMenu(
+            self.entry_frame, values=supplier_names, width=120
+        )
+        self.supplier_options.grid(row=0, column=7, padx=5, pady=5)
 
         self.hsb.grid(row=3, column=0, sticky="ew", padx=10)
 
@@ -131,7 +142,7 @@ class InventoryFrame(CTkFrame):
         self.product_entry.delete(0, "end")
         self.stock_entry.delete(0, "end")
         self.price_entry.delete(0, "end")
-        self.supplier_entry.delete(0, "end")
+        self.supplier_options.set("")
 
     def on_tree_select(self, event):
         """Fill entry boxes when a row is selected"""
@@ -145,7 +156,7 @@ class InventoryFrame(CTkFrame):
             self.product_entry.insert(0, values[1])
             self.stock_entry.insert(0, str(values[2]))
             self.price_entry.insert(0, str(values[3]).replace("₱", ""))
-            self.supplier_entry.insert(0, values[6])
+            self.supplier_options.set(values[6])
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
@@ -190,14 +201,16 @@ class InventoryFrame(CTkFrame):
         product = self.product_entry.get()
         stock = self.stock_entry.get()
         price = self.price_entry.get()
-        supplier = self.supplier_entry.get()
+        supplier = self.supplier_options.get()
 
         if product and stock and price and supplier:
             if Products().add_product(product, price, stock, supplier):
                 self.refresh_tree()
                 self.clear_entries()
             else:
-                print("Error adding product")
+                from tkinter import messagebox
+
+                messagebox.showerror("Cannot Add Product", "Product already exists")
 
     def edit_item(self):
         """Edit selected item in the tree"""
@@ -212,7 +225,7 @@ class InventoryFrame(CTkFrame):
         product = self.product_entry.get()
         stock = self.stock_entry.get()
         price = self.price_entry.get()
-        supplier = self.supplier_entry.get()
+        supplier = self.supplier_options.get()
 
         if not all([product, stock, price, supplier]):
             return
@@ -221,11 +234,16 @@ class InventoryFrame(CTkFrame):
             price = float(price)
             stock = int(stock)
 
-            if Products().edit_product(product_id, product, price, stock, supplier):
-                self.refresh_tree()
-                self.clear_entries()
-            else:
-                print("Error editing product")
+            from tkinter import messagebox
+
+            if not messagebox.askyesno(
+                "Confirm Edit", "Are you sure you want to edit this item?"
+            ):
+                if Products().edit_product(product_id, product, price, stock, supplier):
+                    self.refresh_tree()
+                    self.clear_entries()
+                else:
+                    messagebox.showerror("Cannot Add Product", "Product already exists")
 
         except ValueError:
             print("Invalid price or stock value")
@@ -249,7 +267,7 @@ class InventoryFrame(CTkFrame):
                 self.refresh_tree()
                 self.clear_entries()
             else:
-                print("Error deleting product")
+                messagebox.showerror("Cannot Delete Product", "Product not found")
 
     def on_search_change(self, _event=None):
         """Handle real-time search as user types"""
