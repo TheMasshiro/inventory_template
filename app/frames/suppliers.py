@@ -91,18 +91,18 @@ class SuppliersFrame(CTkFrame):
         self.button_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
         self.add_button = CTkButton(
-            self.button_frame, text="Add Item", command=self.add_supplier, width=120
+            self.button_frame, text="Add Supplier", command=self.add_supplier, width=120
         )
         self.add_button.grid(row=0, column=0, padx=5)
 
         self.edit_button = CTkButton(
-            self.button_frame, text="Edit Item", command=self.edit_item, width=120
+            self.button_frame, text="Edit Supplier", command=self.edit_item, width=120
         )
         self.edit_button.grid(row=0, column=1, padx=5)
 
         self.delete_button = CTkButton(
             self.button_frame,
-            text="Delete Item",
+            text="Delete Supplier",
             command=self.delete_item,
             fg_color="red",
             hover_color="darkred",
@@ -182,10 +182,7 @@ class SuppliersFrame(CTkFrame):
             and contact[1] == "9"
         )
 
-        print(valid_email)
-        print(valid_contact)
-
-        if valid_email and valid_contact:
+        if not valid_email and not valid_contact:
             messagebox.showerror("Invalid Email", "Invalid email and contact number")
         else:
             if company and supplier and email and contact:
