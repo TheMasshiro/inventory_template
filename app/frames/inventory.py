@@ -141,7 +141,7 @@ class InventoryFrame(CTkFrame):
             supplier_names = ["No Suppliers Found"]
 
         self.supplier_options.set("")
-        self.supplier_options.set_values(supplier_names)
+        self.supplier_options.values(supplier_names)
 
     def clear_entries(self):
         """Clear all entry fields"""
