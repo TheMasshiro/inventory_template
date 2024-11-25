@@ -80,18 +80,18 @@ class SalesFrame(customtkinter.CTkFrame):
         self.button_frame.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
 
         self.add_button = CTkButton(
-            self.button_frame, text="Add Item", command=self.add_supplier, width=120
+            self.button_frame, text="Add Sale", command=self.add_supplier, width=120
         )
         self.add_button.grid(row=0, column=0, padx=5)
 
         self.edit_button = CTkButton(
-            self.button_frame, text="Edit Item", command=self.edit_item, width=120
+            self.button_frame, text="Edit Sale", command=self.edit_item, width=120
         )
         self.edit_button.grid(row=0, column=1, padx=5)
 
         self.delete_button = CTkButton(
             self.button_frame,
-            text="Delete Item",
+            text="Delete Sale",
             command=self.delete_item,
             fg_color="red",
             hover_color="darkred",
@@ -212,7 +212,7 @@ class SalesFrame(customtkinter.CTkFrame):
 
         try:
             sold = int(sold)
-            if not messagebox.askyesno(
+            if messagebox.askyesno(
                 "Confirm Edit", "Are you sure you want to edit this item?"
             ):
                 if Sales().edit_sales(
