@@ -50,23 +50,10 @@ class Sales:
 
         try:
             with get_db_connection() as conn:
-                print("sales_id", sales_id)
-                print("product_sold", product_sold)
                 cursor = conn.cursor()
                 cursor.execute(query, (product_sold, sales_id))
                 conn.commit()
+                return True
         except sqlite3.DatabaseError as e:
             logging.error(f"Error: {e}")
-            return None
-
-    def delete_sales(self, sales_id):
-        query = "DELETE FROM sales WHERE sale_id = ?"
-
-        try:
-            with get_db_connection() as conn:
-                cursor = conn.cursor()
-                cursor.execute(query, (sales_id,))
-                conn.commit()
-        except sqlite3.DatabaseError as e:
-            logging.error(f"Error: {e}")
-            return None
+            return False
