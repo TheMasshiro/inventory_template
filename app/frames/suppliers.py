@@ -143,7 +143,7 @@ class SuppliersFrame(CTkFrame):
             self.company_entry.insert(0, values[1])
             self.supplier_entry.insert(0, values[2])
             self.email_entry.insert(0, values[3])
-            self.contact_entry.insert(0, values[4])
+            self.contact_entry.insert(0, str(values[4]))
 
     def refresh_tree(self):
         """Refresh the tree with updated data"""
@@ -182,7 +182,7 @@ class SuppliersFrame(CTkFrame):
             and contact[1] == "9"
         )
 
-        if not valid_email and not valid_contact:
+        if not valid_email or not valid_contact:
             messagebox.showerror("Invalid Email", "Invalid email and contact number")
         else:
             if company and supplier and email and contact:
@@ -218,7 +218,7 @@ class SuppliersFrame(CTkFrame):
             and contact[1] == "9"
         )
 
-        if not valid_email and not valid_contact:
+        if not valid_email or not valid_contact:
             messagebox.showerror("Invalid Email", "Invalid email and contact number")
         else:
             if not all([company, supplier, email, contact]):
