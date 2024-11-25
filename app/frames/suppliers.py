@@ -218,7 +218,7 @@ class SuppliersFrame(CTkFrame):
             and contact[1] == "9"
         )
 
-        if valid_email and valid_contact:
+        if not valid_email and not valid_contact:
             messagebox.showerror("Invalid Email", "Invalid email and contact number")
         else:
             if not all([company, supplier, email, contact]):
