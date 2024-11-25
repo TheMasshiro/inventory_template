@@ -13,6 +13,8 @@ class AppTop(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
+        # Theme configuration
+
         self.title("Skibidi Inventory Management")
         self.geometry("700x450")
 
