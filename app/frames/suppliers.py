@@ -182,6 +182,9 @@ class SuppliersFrame(CTkFrame):
             and contact[1] == "9"
         )
 
+        print(valid_email)
+        print(valid_contact)
+
         if valid_email and valid_contact:
             messagebox.showerror("Invalid Email", "Invalid email and contact number")
         else:
